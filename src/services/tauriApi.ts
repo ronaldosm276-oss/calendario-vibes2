@@ -1,0 +1,30 @@
+import { invoke } from '@tauri-apps/api/core';
+import type { AlarmInfo, AuthState, CalendarEvent, CalendarInfo, Settings, SoundInfo, SyncState } from '../types/calendar';
+
+export const api = {
+  getAuthState: () => invoke<AuthState>('get_auth_state'),
+  signIn: () => invoke<AuthState>('sign_in'),
+  signOut: () => invoke<void>('sign_out'),
+  listCalendars: () => invoke<CalendarInfo[]>('list_calendars'),
+  getCachedCalendars: () => invoke<CalendarInfo[]>('get_cached_calendars'),
+  listEvents: (start: string, end: string, calendarIds: string[]) => invoke<CalendarEvent[]>('list_events', { start, end, calendarIds }),
+  createEvent: (event: CalendarEvent) => invoke<CalendarEvent>('create_event', { event }),
+  updateEvent: (event: CalendarEvent) => invoke<CalendarEvent>('update_event', { event }),
+  deleteEvent: (calendarId: string, eventId: string) => invoke<void>('delete_event', { calendarId, eventId }),
+  sync: () => invoke<SyncState>('sync_now'),
+  getCachedEvents: (start: string, end: string) => invoke<CalendarEvent[]>('get_cached_events', { start, end }),
+  getSettings: () => invoke<Settings>('get_settings'),
+  saveSettings: (settings: Settings) => invoke<void>('save_settings', { settings }),
+  setWindowState: (x: number, y: number, width: number, height: number) => invoke<void>('save_window_state', { x, y, width, height }),
+  getWindowState: () => invoke<{ x?: number; y?: number; width?: number; height?: number }>('get_window_state'),
+  listSounds: () => invoke<SoundInfo[]>('list_sounds'),
+  addSound: (sourcePath: string) => invoke<SoundInfo>('add_sound', { sourcePath }),
+  removeSound: (name: string) => invoke<void>('remove_sound', { name }),
+  getSoundsDir: () => invoke<string>('get_sounds_dir'),
+  openSoundsFolder: () => invoke<void>('open_sounds_folder'),
+  playSound: (sound: string | null, volume: number, looped: boolean) => invoke<void>('play_sound', { sound, volume, looped }),
+  stopSound: () => invoke<void>('stop_sound'),
+  getActiveAlarms: () => invoke<AlarmInfo[]>('get_active_alarms'),
+  acknowledgeAlarm: (id: string) => invoke<void>('acknowledge_alarm', { id }),
+  snoozeAlarm: (id: string, minutes: number) => invoke<void>('snooze_alarm', { id, minutes }),
+};
